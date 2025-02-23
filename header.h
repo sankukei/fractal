@@ -56,7 +56,7 @@ typedef struct	s_libx
 typedef struct	s_motherboard
 {
 	 t_vars	vars;
-	 t_fractal frac;
+	 t_fractal f;
 	 t_libx	libx;
 	
 } t_mother;
