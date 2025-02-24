@@ -23,28 +23,12 @@ void	p_put(t_mother *mb, int x, int y, int color)
 	*(unsigned *)dst = color;
 }
 
-void	init_values(float *a, float *b, float *c, float *d)
+void	init_values(float *a, float *b, int *c, float *d)
 {
 	*a = 0;
 	*b = 0;
 	*c = 0;
 	*d = 0;
-}
-
-int     color_picker(float count)
-{
-        if (count <= 0.01)
-                return (0xffffff);
-        if (count < 0.02)
-                return (0xf9fff5);
-        else if (count < 0.05)
-                return (0xffffff);
-        else if (count < 0.1)
-                return (0x00ff00);
-        else if (count < 0.5)
-                return (0xff00ff);
-        else
-                return (0x0000ff);
 }
 
 double	rescale(float val, double in_max, double out_min, double out_max)
@@ -57,50 +41,71 @@ int	render_img(t_mother *mb)
 	double tmp;
 
 	tmp = 0;
-	init_values(&mb->f.i, &mb->f.j, &mb->f.count, &mb->f.max_itter);
-	while (mb->f.i++ < mb->vars.screen_width)
+
+	//init_values(&mb->f.i, &mb->f.j, &mb->f.count, &mb->f.max_itter);
+	double i = 0;
+
+	double j = 0;
+	double count = 0;
+	double x = 0;
+	double y = 0;
+	double c1 = 0;
+	double c2 = 0;
+
+
+	while (i++ < 1000)
 	{
-		printf("%f", mb->f.i);
-		mb->f.j = 0;
-		while (mb->f.j++ < mb->vars.screen_height)
+
+		j = 0;
+		while (j++ < 1000)
 		{
-			mb->f.count = 0;
-			mb->f.x = rescale(mb->f.i, 1000, -2, 2) / mb->vars.zoom;
-			mb->f.y = rescale(mb->f.j, 1000, 2, -2) / mb->vars.zoom;
-			mb->f.c1 = mb->f.x;
-			mb->f.c2 = mb->f.y;
-			while (mb->f.count <= 10)
+			count = 0;
+
+			x = rescale(i, 1000, -2, 2) * mb->vars.zoom;
+			y = rescale(j, 1000, 2, -2) * mb->vars.zoom;
+			c1 = x;
+			c2 = y;
+
+			while (count <= 10)
 			{
-				tmp = mb->f.x;
-				mb->f.x = (mb->f.x * mb->f.x) - (mb->f.y * mb->f.y);
-				mb->f.y = 2 * tmp * mb->f.y;
-				mb->f.x = mb->f.x + mb->f.c1;
-				mb->f.y = mb->f.y + mb->f.c2;
-				if ((mb->f.x * mb->f.x) + (mb->f.y * mb->f.y) > 4)
+				tmp = x;
+				x = (x * x) - (y * y);
+				y = 2 * tmp * y;
+				x = x + c1;
+				y = y + c2;
+
+				if ((x * x) + (y * y) > 4)
 				{
-					p_put(mb, mb->f.i, mb->f.j, color_picker(mb->f.count));
+
+					p_put(mb, i, j, 0xFFFFFF);
 					break;
 				}
-				mb->f.count += 0.01;
+
+				count += 1;
 			}
-			if (mb->f.count >= 10)
-					p_put(mb, mb->f.i, mb->f.j, color_picker(mb->f.count));
+			if (count >= 10)
+					p_put(mb, i, j, 0x000000);
 		}
 	}
-	int xd = write(1, "fin de boucle", 13);
-	xd++;
 	return (0);
 }
 
 int	mouse_hook(int keycode, t_mother *mb)
 {
-	mb->vars.zoom *= 2;
+	int aa = write(1, "xdd", 3);
+	aa++;
+	mb->vars.zoom += 0.2;
 	render_img(mb);
-	mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
 	if (keycode == 4)
 	{
 		(void)mb;
+		int a = write(1, "xdd", 3);
+		a++;
+//		mb->vars.zoom += 0.2;
+//		render_img(mb);
+//		return write(1, "MW UP", 5);
 		return (1);
+//		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
 	}
 	return (0);
 }
@@ -108,7 +113,7 @@ int	mouse_hook(int keycode, t_mother *mb)
 int	main(int ac, char **av)
 {
 	t_mother mb;
-	mb.vars.zoom = 2;
+	mb.vars.zoom = 1;
 
 	mb.libx.mlx = mlx_init();
 	mb.vars.screen_height = 1000;
@@ -122,6 +127,8 @@ int	main(int ac, char **av)
 	mb.libx.img = mlx_new_image(mb.libx.mlx, 1000, 1000);
 	mb.libx.addr = mlx_get_data_addr(mb.libx.img, &mb.libx.bytes_per_pixel, &mb.libx.line_length, &mb.libx.endian);
 	render_img(&mb);
+//	render_img(&mb);
+//	mlx_mouse_hook(mb.libx.win, mouse_hook, &mb);
 	mlx_key_hook(mb.libx.win, mouse_hook, &mb);
 	mlx_put_image_to_window(mb.libx.mlx, mb.libx.win, mb.libx.img, 0, 0);
 	mlx_loop(mb.libx.mlx);
