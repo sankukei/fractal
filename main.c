@@ -55,9 +55,8 @@ double	rescale(float val, double in_max, double out_min, double out_max)
 
 void	calculate1(t_mother *mb)
 {
-	double shift = 1;
-	mb->f.x = (rescale(mb->f.i, 1000, -2, 2) / mb->libx.zoom + shift);
-	mb->f.y = (rescale(mb->f.j, 1000, 2, -2) / mb->libx.zoom + shift);
+	mb->f.x = (rescale(mb->f.i, 1000, -2, 2) / mb->vars.zoom + mb->f.shift);
+	mb->f.y = (rescale(mb->f.j, 1000, 2, -2) / mb->vars.zoom + mb->f.shift);
 	mb->f.c1 = mb->f.x;
 	mb->f.c2 = mb->f.y;
 }
@@ -74,6 +73,7 @@ void	calulate2(t_mother *mb)
 int	render_img(t_mother *mb)
 {
 	mb->f.tmp = 0;
+	mb->f.shift = 0;
 	init_values(&mb->f.i, &mb->f.j, &mb->f.count, &mb->f.max_itter);
 	while (mb->f.i++ < mb->vars.screen_width)
 	{
@@ -107,10 +107,17 @@ int	mouse_hook(int keycode, int x, int y, t_mother *mb)
 	(void)y;
 	if (keycode == 65363)
 	{
+		write(1, "aaa", 3);
+		mb->f.shift += 1;
+		render_img(mb);
+		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
+
 	}
 	if (keycode == 4)
 	{
-		mb->libx.zoom *= 1.1;
+		mb->vars.zoom *= 1.1;
+		render_img(mb);
+		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
 	}
 	if (keycode == 122)
 	{
@@ -147,7 +154,8 @@ int	main(int ac, char **av)
 {
 	t_mother mb;
 
-	mb.libx.zoom = 1;
+	mb.vars.zoom = 1;
+	mb.f.shift = 0;
 	mb.libx.mlx = mlx_init();
 	mb.vars.screen_height = 1000;
 	mb.vars.screen_width = 1000;

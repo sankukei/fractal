@@ -33,6 +33,7 @@ typedef struct	s_fractal
 	double	y;
 	double	c1;
 	double	c2;
+	double	shift;
 
 	float	i;
 	float	j;
