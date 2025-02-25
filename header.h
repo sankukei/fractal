@@ -38,6 +38,8 @@ typedef struct	s_fractal
 	float	j;
 	float	count;
 
+	double	tmp;
+
 } t_fractal;
 
 typedef struct	s_libx
