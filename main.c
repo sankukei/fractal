@@ -60,7 +60,6 @@ int	render_img(t_mother *mb)
 	init_values(&mb->f.i, &mb->f.j, &mb->f.count, &mb->f.max_itter);
 	while (mb->f.i++ < mb->vars.screen_width)
 	{
-		printf("%f", mb->f.i);
 		mb->f.j = 0;
 		while (mb->f.j++ < mb->vars.screen_height)
 		{
@@ -87,8 +86,6 @@ int	render_img(t_mother *mb)
 					p_put(mb, mb->f.i, mb->f.j, color_picker(mb->f.count));
 		}
 	}
-	int xd = write(1, "fin de boucle", 13);
-	xd++;
 	return (0);
 }
 
