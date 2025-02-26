@@ -55,18 +55,20 @@ double	rescale(float val, double in_max, double out_min, double out_max)
 
 void	calculate1(t_mother *mb)
 {
-	//mb->f.x = (rescale(mb->f.i, 1000, -2, 0.47) * mb->vars.zoom + mb->f.v_shift);
-	//mb->f.y = (rescale(mb->f.j, 1000, 1.12, -1.12) * mb->vars.zoom + mb->f.h_shift);
-	//mb->f.c1 = mb->f.x;
-	//mb->f.c2 = mb->f.y;
-	
-//JULIA
-
-	mb->f.x = (rescale(mb->f.i, 1000, -2, 2) * mb->vars.zoom + mb->f.v_shift);
-	mb->f.y = (rescale(mb->f.j, 1000, 2, -2) * mb->vars.zoom + mb->f.h_shift);
-	mb->f.c1 = -0.79;
-	mb->f.c2 = 0.15;
-
+	if (mb->vars.choice == 1)
+	{	
+		mb->f.x = (rescale(mb->f.i, 1000, -2, 0.47) * mb->vars.zoom + mb->f.v_shift);
+		mb->f.y = (rescale(mb->f.j, 1000, 1.12, -1.12) * mb->vars.zoom + mb->f.h_shift);
+		mb->f.c1 = mb->f.x;
+		mb->f.c2 = mb->f.y;
+	}
+	else
+	{
+		mb->f.x = (rescale(mb->f.i, 1000, -2, 2) * mb->vars.zoom + mb->f.v_shift);
+		mb->f.y = (rescale(mb->f.j, 1000, 2, -2) * mb->vars.zoom + mb->f.h_shift);
+		mb->f.c1 = mb->f.julia_c1;
+		mb->f.c2 = mb->f.julia_c2;
+	}
 }
 
 void	calulate2(t_mother *mb)
@@ -230,15 +232,27 @@ double	d_atoi(char *str)
 }
 int	main(int ac, char **av)
 {
-	d_atoi("10.6902");
 	t_mother mb;
+
+	mb.vars.choice = 0;
 	if (!(ft_strcmp(av[1], "mandelbrot")))
-	{
-		write(1, "yes", 3);
-	}
+		mb.vars.choice = 1;
 	else if (!(ft_strcmp(av[1], "julia")))
 	{
-
+		mb.vars.choice = 2;
+		if (av[2] && av[3])
+		{
+			mb.f.julia_c1 = d_atoi(av[2]);
+			write(1, "aaa", 3);
+			printf("%f", mb.f.julia_c1);
+			fflush(stdout);
+			mb.f.julia_c2 = d_atoi(av[3]);
+		}
+		else
+		{
+			write(1, "error", 5);
+			return (1);
+		}
 	}
 	else
 		return (0);

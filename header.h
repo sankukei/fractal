@@ -14,6 +14,7 @@
 
 typedef struct	s_vars
 {
+	int	choice;
 	int	screen_width;
 	int	screen_height;
 
@@ -35,6 +36,9 @@ typedef struct	s_fractal
 	double	c2;
 	double	v_shift;
 	double	h_shift;
+
+	double	julia_c1;
+	double	julia_c2;
 
 	float	i;
 	float	j;
