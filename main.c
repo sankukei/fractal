@@ -55,10 +55,18 @@ double	rescale(float val, double in_max, double out_min, double out_max)
 
 void	calculate1(t_mother *mb)
 {
-	mb->f.x = (rescale(mb->f.i, 1000, -2, 0.47) * mb->vars.zoom + mb->f.v_shift);
-	mb->f.y = (rescale(mb->f.j, 1000, 1.12, -1.12) * mb->vars.zoom + mb->f.h_shift);
-	mb->f.c1 = mb->f.x;
-	mb->f.c2 = mb->f.y;
+	//mb->f.x = (rescale(mb->f.i, 1000, -2, 0.47) * mb->vars.zoom + mb->f.v_shift);
+	//mb->f.y = (rescale(mb->f.j, 1000, 1.12, -1.12) * mb->vars.zoom + mb->f.h_shift);
+	//mb->f.c1 = mb->f.x;
+	//mb->f.c2 = mb->f.y;
+	
+//JULIA
+
+	mb->f.x = (rescale(mb->f.i, 1000, -2, 2) * mb->vars.zoom + mb->f.v_shift);
+	mb->f.y = (rescale(mb->f.j, 1000, 2, -2) * mb->vars.zoom + mb->f.h_shift);
+	mb->f.c1 = -0.79;
+	mb->f.c2 = 0.15;
+
 }
 
 void	calulate2(t_mother *mb)
@@ -230,6 +238,7 @@ int	main(int ac, char **av)
 	}
 	else if (!(ft_strcmp(av[1], "julia")))
 	{
+
 	}
 	else
 		return (0);
