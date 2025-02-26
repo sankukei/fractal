@@ -217,7 +217,10 @@ double	d_atoi(char *str)
 	i = 0;
 	y = 0;
 	if (str[i] == '-')
+	{
 		neg = -1;
+		i++;
+	}
 	while (str[i] && str[i] != '.')
 		res1 = (res1 * 10) + str[i++] - 48;
 	i++;
@@ -243,7 +246,6 @@ int	main(int ac, char **av)
 		if (av[2] && av[3])
 		{
 			mb.f.julia_c1 = d_atoi(av[2]);
-			write(1, "aaa", 3);
 			printf("%f", mb.f.julia_c1);
 			fflush(stdout);
 			mb.f.julia_c2 = d_atoi(av[3]);
