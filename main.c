@@ -55,8 +55,8 @@ double	rescale(float val, double in_max, double out_min, double out_max)
 
 void	calculate1(t_mother *mb)
 {
-	mb->f.x = (rescale(mb->f.i, 1000, -2, 2) * mb->vars.zoom + mb->f.v_shift);
-	mb->f.y = (rescale(mb->f.j, 1000, 2, -2) * mb->vars.zoom + mb->f.h_shift);
+	mb->f.x = (rescale(mb->f.i, 1000, -2, 0.47) * mb->vars.zoom + mb->f.v_shift);
+	mb->f.y = (rescale(mb->f.j, 1000, 1.12, -1.12) * mb->vars.zoom + mb->f.h_shift);
 	mb->f.c1 = mb->f.x;
 	mb->f.c2 = mb->f.y;
 }
@@ -92,7 +92,7 @@ int	render_img(t_mother *mb)
 				mb->f.count += 1;
 			}
 			if (mb->f.count >= mb->f.max_itter)
-					p_put(mb, mb->f.i, mb->f.j, color_picker(mb->f.count, mb));
+					p_put(mb, mb->f.i, mb->f.j, 0x000000);
 		}
 	}
 	return (0);
@@ -127,13 +127,6 @@ int	mouse_hook(int keycode, int x, int y, t_mother *mb)
 		mb->f.max_itter *= 0.95;
 		render_img(mb);
 		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
-	}
-	if (keycode == 122)
-	{
-		mb->vars.zoom *= 1.1;
-		render_img(mb);
-		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
-		return (1);
 	}
 	return (0);
 }
@@ -175,7 +168,7 @@ int	key_hook(int keycode, t_mother *mb)
 	return (0);	
 }
 
-int	ft_strncmp(const char *s1, const char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
 	int	i;
 
@@ -192,7 +185,13 @@ int	ft_strncmp(const char *s1, const char *s2)
 int	main(int ac, char **av)
 {
 	t_mother mb;
-
+	if (!(ft_strcmp(av[1], "mandelbrot")))
+		write(1, "yes", 3);
+	else if (!(ft_strcmp(av[1], "julia")))
+		write(1, "maybe", 5);
+	else
+		return (0);
+	
 	mb.vars.zoom = 1;
 	mb.f.v_shift = 0;
 	mb.f.h_shift = 0;
