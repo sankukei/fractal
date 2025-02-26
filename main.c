@@ -24,28 +24,28 @@ void	p_put(t_mother *mb, int x, int y, int color)
 	*(unsigned *)dst = color;
 }
 
-void	init_values(float *a, float *b, float *c, float *d)
+void	init_values(float *a, float *b, float *c)
 {
 	*a = 0;
 	*b = 0;
 	*c = 0;
-	*d = 0;
 }
 
-int	color_picker(float count)
+int	color_picker(int count, t_mother *mb)
 {
-	if (count <= 0.01)
-		return (0xffffff);
-	else if (count < 0.02)
-		return (0xf9fff5);
-	else if (count < 0.05)
-		return (0xffffff);
-	else if (count < 0.1)
-		return (0x00ff00);
-	else if (count < 0.5)
-		return (0xff00ff);
-	else
-		return (0x0000ff);
+	float	clr;
+
+	clr = (float)count / mb->f.max_itter;
+
+	int red;
+	int blue; 
+	int green;
+
+	red = (int)(9 * clr * clr * clr * (1 - clr) * 255);
+	green = (int)(15 * clr * clr * (1 - clr) * (1 - clr) * 255);
+	blue = (int)(8.5 * clr * (1 - clr) * (1 - clr) * (1 - clr) * 255);
+	return ((red << 16) | (green << 8) | blue);
+
 }
 
 double	rescale(float val, double in_max, double out_min, double out_max)
@@ -55,8 +55,8 @@ double	rescale(float val, double in_max, double out_min, double out_max)
 
 void	calculate1(t_mother *mb)
 {
-	mb->f.x = (rescale(mb->f.i, 1000, -2, 2) / mb->vars.zoom + mb->f.shift);
-	mb->f.y = (rescale(mb->f.j, 1000, 2, -2) / mb->vars.zoom + mb->f.shift);
+	mb->f.x = (rescale(mb->f.i, 1000, -2, 2) * mb->vars.zoom + mb->f.v_shift);
+	mb->f.y = (rescale(mb->f.j, 1000, 2, -2) * mb->vars.zoom + mb->f.h_shift);
 	mb->f.c1 = mb->f.x;
 	mb->f.c2 = mb->f.y;
 }
@@ -73,8 +73,7 @@ void	calulate2(t_mother *mb)
 int	render_img(t_mother *mb)
 {
 	mb->f.tmp = 0;
-	mb->f.shift = 0;
-	init_values(&mb->f.i, &mb->f.j, &mb->f.count, &mb->f.max_itter);
+	init_values(&mb->f.i, &mb->f.j, &mb->f.count);
 	while (mb->f.i++ < mb->vars.screen_width)
 	{
 		mb->f.j = 0;
@@ -82,18 +81,18 @@ int	render_img(t_mother *mb)
 		{
 			mb->f.count = 0;
 			calculate1(mb);	
-			while (mb->f.count <= 1)
+			while (mb->f.count < mb->f.max_itter)
 			{
 				calulate2(mb);
 				if ((mb->f.x * mb->f.x) + (mb->f.y * mb->f.y) > 4)
 				{
-					p_put(mb, mb->f.i, mb->f.j, color_picker(mb->f.count));
+					p_put(mb, mb->f.i, mb->f.j, color_picker(mb->f.count, mb));
 					break;
 				}
-				mb->f.count += 0.01;
+				mb->f.count += 1;
 			}
-			if (mb->f.count >= 1)
-					p_put(mb, mb->f.i, mb->f.j, color_picker(mb->f.count));
+			if (mb->f.count >= mb->f.max_itter)
+					p_put(mb, mb->f.i, mb->f.j, color_picker(mb->f.count, mb));
 		}
 	}
 	return (0);
@@ -101,21 +100,31 @@ int	render_img(t_mother *mb)
 
 int	mouse_hook(int keycode, int x, int y, t_mother *mb)
 {	
-//	printf("%d", keycode);
-//	fflush(stdout);
 	(void)x;
 	(void)y;
-	if (keycode == 65363)
+	if (keycode == 1)
 	{
-		write(1, "aaa", 3);
-		mb->f.shift += 1;
+		mb->f.max_itter *= 1.2;
 		render_img(mb);
 		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
-
+	}
+	if (keycode == 3)
+	{
+		mb->f.max_itter *= 0.8;
+		render_img(mb);
+		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
 	}
 	if (keycode == 4)
 	{
+		mb->vars.zoom *= 0.9;
+		mb->f.max_itter *= 1.05;
+		render_img(mb);
+		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
+	}
+	if (keycode == 5)
+	{
 		mb->vars.zoom *= 1.1;
+		mb->f.max_itter *= 0.95;
 		render_img(mb);
 		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
 	}
@@ -126,14 +135,44 @@ int	mouse_hook(int keycode, int x, int y, t_mother *mb)
 		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
 		return (1);
 	}
+	return (0);
+}
+
+int	key_hook(int keycode, t_mother *mb)
+{
+//	printf("%d", keycode);
+//	fflush(stdout);
+	if (keycode == 65363)
+	{
+		mb->f.v_shift += 0.5 * mb->vars.zoom;
+		render_img(mb);
+		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
+	}
+	if (keycode == 65361)
+	{
+		mb->f.v_shift -= 0.5 * mb->vars.zoom;
+		render_img(mb);
+		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
+	}
+	if (keycode == 65362)
+	{
+		mb->f.h_shift += 0.5 * mb->vars.zoom;
+		render_img(mb);
+		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
+	}
+	if (keycode == 65364)
+	{
+		mb->f.h_shift -= 0.5 * mb->vars.zoom;
+		render_img(mb);
+		mlx_put_image_to_window(mb->libx.mlx, mb->libx.win, mb->libx.img, 0, 0);
+	}
 
 	if (keycode == 65307)
 	{
 		mlx_destroy_window(mb->libx.mlx, mb->libx.win);
 		return (2);
 	}
-
-	return (0);
+	return (0);	
 }
 
 int	ft_strncmp(const char *s1, const char *s2)
@@ -155,7 +194,9 @@ int	main(int ac, char **av)
 	t_mother mb;
 
 	mb.vars.zoom = 1;
-	mb.f.shift = 0;
+	mb.f.v_shift = 0;
+	mb.f.h_shift = 0;
+	mb.f.max_itter = 100;
 	mb.libx.mlx = mlx_init();
 	mb.vars.screen_height = 1000;
 	mb.vars.screen_width = 1000;
@@ -167,7 +208,7 @@ int	main(int ac, char **av)
 	mb.libx.addr = mlx_get_data_addr(mb.libx.img, &mb.libx.bytes_per_pixel, &mb.libx.line_length, &mb.libx.endian);
 	render_img(&mb);
 	mlx_mouse_hook(mb.libx.win, mouse_hook, &mb);
-	mlx_key_hook(mb.libx.win, mouse_hook, &mb);
+	mlx_key_hook(mb.libx.win, key_hook, &mb);
 	mlx_put_image_to_window(mb.libx.mlx, mb.libx.win, mb.libx.img, 0, 0);
 	mlx_loop(mb.libx.mlx);
 	return (0);
