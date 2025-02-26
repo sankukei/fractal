@@ -182,16 +182,57 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
+int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+
+double	d_atoi(char *str)
+{
+	int	i;
+	int	y;
+	double	res1;
+	double	res2;
+	int	neg;
+
+	neg = 1;
+	res1 = 0;
+	res2 = 0;
+	i = 0;
+	y = 0;
+	if (str[i] == '-')
+		neg = -1;
+	while (str[i] && str[i] != '.')
+		res1 = (res1 * 10) + str[i++] - 48;
+	i++;
+	while (str[i] && i < ft_strlen(str))
+	{
+		res2 = (res2 * 10) + str[i++] - 48;
+		y++;
+	}
+	while (y--)
+		res2 /= 10;
+	return ((res1 + res2) * neg);
+}
 int	main(int ac, char **av)
 {
+	d_atoi("10.6902");
 	t_mother mb;
 	if (!(ft_strcmp(av[1], "mandelbrot")))
+	{
 		write(1, "yes", 3);
+	}
 	else if (!(ft_strcmp(av[1], "julia")))
-		write(1, "maybe", 5);
+	{
+	}
 	else
 		return (0);
-	
 	mb.vars.zoom = 1;
 	mb.f.v_shift = 0;
 	mb.f.h_shift = 0;
