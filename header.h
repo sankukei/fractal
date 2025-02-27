@@ -61,6 +61,12 @@ typedef struct	s_libx
 	char	*addr;
 } t_libx;
 
+typedef struct	s_pyta
+{
+	double	x;
+	double	y;
+} t_pyta;
+
 typedef struct	s_motherboard
 {
 	 t_vars	vars;
