@@ -14,6 +14,7 @@
 #include "header.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 void	p_put(t_mother *mb, int x, int y, int color)
 {
@@ -143,8 +144,6 @@ int	mouse_hook(int keycode, int x, int y, t_mother *mb)
 
 int	key_hook(int keycode, t_mother *mb)
 {
-//	printf("%d", keycode);
-//	fflush(stdout);
 	if (keycode == 65363)
 	{
 		mb->f.v_shift += 0.5 * mb->vars.zoom;
@@ -172,8 +171,14 @@ int	key_hook(int keycode, t_mother *mb)
 
 	if (keycode == 65307)
 	{
+		mlx_clear_window(mb->libx.mlx, mb->libx.win);
+		mlx_destroy_image(mb->libx.mlx, mb->libx.img);
 		mlx_destroy_window(mb->libx.mlx, mb->libx.win);
-		return (2);
+		mlx_destroy_display(mb->libx.mlx);
+		mlx_loop_end(mb->libx.mlx);
+		free(mb->libx.mlx);
+		exit(0);
+		return (1);
 	}
 	return (0);	
 }
@@ -233,12 +238,33 @@ double	d_atoi(char *str)
 		res2 /= 10;
 	return ((res1 + res2) * neg);
 }
+
+int	clear_data(t_mother *mb)
+{
+
+		mlx_clear_window(mb->libx.mlx, mb->libx.win);
+		mlx_destroy_image(mb->libx.mlx, mb->libx.img);
+		mlx_destroy_window(mb->libx.mlx, mb->libx.win);
+		mlx_destroy_display(mb->libx.mlx);
+		mlx_loop_end(mb->libx.mlx);
+		free(mb->libx.mlx);
+		exit(0);
+		return (1);
+}
+
+void	pyta(t_mother *mb)
+{
+	(void)mb;
+	//mb->a
+
+}
+
 int	main(int ac, char **av)
 {
 	t_mother mb;
 
 	mb.vars.choice = 0;
-	if (!(ft_strcmp(av[1], "mandelbrot")))
+	if (av[1] && !(ft_strcmp(av[1], "mandelbrot")))
 		mb.vars.choice = 1;
 	else if (!(ft_strcmp(av[1], "julia")))
 	{
@@ -246,8 +272,6 @@ int	main(int ac, char **av)
 		if (av[2] && av[3])
 		{
 			mb.f.julia_c1 = d_atoi(av[2]);
-			printf("%f", mb.f.julia_c1);
-			fflush(stdout);
 			mb.f.julia_c2 = d_atoi(av[3]);
 		}
 		else
@@ -257,7 +281,10 @@ int	main(int ac, char **av)
 		}
 	}
 	else
+	{
+		write(1, "Program name + Fractal to show", 30);
 		return (0);
+	}
 	mb.vars.zoom = 1;
 	mb.f.v_shift = 0;
 	mb.f.h_shift = 0;
@@ -273,6 +300,7 @@ int	main(int ac, char **av)
 	mb.libx.addr = mlx_get_data_addr(mb.libx.img, &mb.libx.bytes_per_pixel, &mb.libx.line_length, &mb.libx.endian);
 	render_img(&mb);
 	mlx_mouse_hook(mb.libx.win, mouse_hook, &mb);
+	mlx_hook(mb.libx.win, 17, 0L, clear_data, &mb);
 	mlx_key_hook(mb.libx.win, key_hook, &mb);
 	mlx_put_image_to_window(mb.libx.mlx, mb.libx.win, mb.libx.img, 0, 0);
 	mlx_loop(mb.libx.mlx);
