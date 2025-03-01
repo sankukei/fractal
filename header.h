@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   header.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leothoma <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sankukei <sankukei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 02:19:09 by leothoma          #+#    #+#             */
-/*   Updated: 2025/02/20 02:19:10 by leothoma         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:36:11 by sankukei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HEADER_H
+
+#include <mlx.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 typedef struct	s_vars
 {
@@ -74,5 +79,20 @@ typedef struct	s_motherboard
 	 t_libx	libx;
 	
 } t_mother;
+
+void	init_value(char * choice, t_mother mb);
+int	key_hook(int keycode, t_mother *mb);
+int	render_img(t_mother *mb);
+int	mouse_hook(int keycode, int x, int y, t_mother *mb);
+int	clear_data(t_mother *mb);
+void	init_mlx(t_mother *mb);
+int ft_strcmp(const char *s1, const char *s2);
+void	init_fractal(t_mother *mb, int choice);
+double	d_atoi(char *str);
+void setup_hooks(t_mother *mb);
+void	p_put(t_mother *mb, int x, int y, int color);
+int	color_picker(int count, t_mother *mb);
+double rescale(float val, double in_max, double out_min, double out_max);
+void	init_values(float *a, float *b, float *c);
 
 #endif

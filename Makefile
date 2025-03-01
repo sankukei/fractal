@@ -6,7 +6,7 @@
 #    By: sankukei <sankukei@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 16:22:30 by leothoma          #+#    #+#              #
-#    Updated: 2025/02/22 16:18:51 by sankukei         ###   ########.fr        #
+#    Updated: 2025/03/01 16:33:49 by sankukei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,10 @@ NAME = xd
 COMP = cc
 
 SRC =	main.c \
+		draw.c \
+		utils.c \
+		init.c \
+		event.c \
 
 OBJS = ${SRC:.c=.o}
 
