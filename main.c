@@ -6,7 +6,7 @@
 /*   By: sankukei <sankukei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 00:42:15 by leothoma          #+#    #+#             */
-/*   Updated: 2025/03/01 16:43:38 by sankukei         ###   ########.fr       */
+/*   Updated: 2025/03/02 02:40:39 by sankukei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int	main(int ac, char **av)
 	t_mother	mb;
 
 	if (ac > 1 && av[1] && !(ft_strcmp(av[1], "mandelbrot")))
-		init_fractal(&mb, 1);
+		init_fractal(&mb, 1, 0, 0);
 	else if (ac == 4 && av[1] && !(ft_strcmp(av[1], "julia")))
-		init_fractal(&mb, 2);
+		init_fractal(&mb, 2, d_atoi(av[2]), d_atoi(av[3]));
 	else
 		return (write(1, "mandelbrot | julia + 'c1' + 'c2'", 33));
 	init_mlx(&mb);

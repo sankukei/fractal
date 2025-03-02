@@ -1,11 +1,15 @@
 #include "header.h"
 
-void	init_fractal(t_mother *mb, int choice)
+void	init_fractal(t_mother *mb, int choice, double a, double b)
 {
 	if (choice == 1)
 		mb->vars.choice = 1;
 	else
+	{
 		mb->vars.choice = 0;
+		mb->f.julia_c1 = a;
+		mb->f.julia_c2 = b;
+	}
 	mb->vars.zoom = 1;
 	mb->f.v_shift = 0;
 	mb->f.h_shift = 0;

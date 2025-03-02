@@ -6,7 +6,7 @@
 /*   By: sankukei <sankukei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 02:19:09 by leothoma          #+#    #+#             */
-/*   Updated: 2025/03/01 16:36:11 by sankukei         ###   ########.fr       */
+/*   Updated: 2025/03/02 02:09:17 by sankukei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	mouse_hook(int keycode, int x, int y, t_mother *mb);
 int	clear_data(t_mother *mb);
 void	init_mlx(t_mother *mb);
 int ft_strcmp(const char *s1, const char *s2);
-void	init_fractal(t_mother *mb, int choice);
+void	init_fractal(t_mother *mb, int choice, double a, double b);
 double	d_atoi(char *str);
 void setup_hooks(t_mother *mb);
 void	p_put(t_mother *mb, int x, int y, int color);

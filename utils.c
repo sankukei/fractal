@@ -45,9 +45,9 @@ double	d_atoi(char *str)
 	while (str[i] && str[i] != '.')
 		res1 = (res1 * 10) + str[i++] - 48;
 	i++;
-	while (str[i] && i < ft_strlen(str) && y++)
+	while (str[i] && ++y)
 		res2 = (res2 * 10) + str[i++] - 48;
-	while (y--)
+	while (y-- > 0)
 		res2 /= 10;
 	return ((res1 + res2) * neg);
 }
