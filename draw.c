@@ -32,7 +32,7 @@ int	color_picker(int count, t_mother *mb)
 	red = (int)(9 * clr * clr * clr * (1 - clr) * 255);
 	green = (int)(15 * clr * clr * (1 - clr) * (1 - clr) * 255);
 	blue = (int)(8.5 * clr * (1 - clr) * (1 - clr) * (1 - clr) * 255);
-	return ((red << 16) | (green << 8) | blue) * mb->f.c_shift;
+	return (((red << 16) | (green << 8) | blue) * mb->f.c_shift);
 }
 
 void	calculate1(t_mother *mb)
