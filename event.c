@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   event.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: leothoma <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 14:28:29 by leothoma          #+#    #+#             */
+/*   Updated: 2025/03/04 14:28:31 by leothoma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 int	mouse_hook(int keycode, int x, int y, t_mother *mb)
@@ -33,6 +45,8 @@ int	key_hook(int keycode, t_mother *mb)
 		mb->f.h_shift += 0.5 * mb->vars.zoom;
 	else if (keycode == 65364)
 		mb->f.h_shift -= 0.5 * mb->vars.zoom;
+	else if (keycode == 99)
+		mb->f.c_shift *= 1.25;
 	else if (keycode == 65307)
 		clear_data(mb);
 	render_img(mb);

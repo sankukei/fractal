@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: leothoma <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 14:28:36 by leothoma          #+#    #+#             */
+/*   Updated: 2025/03/04 14:28:37 by leothoma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 void	init_fractal(t_mother *mb, int choice, double a, double b)
@@ -14,6 +26,7 @@ void	init_fractal(t_mother *mb, int choice, double a, double b)
 	mb->f.v_shift = 0;
 	mb->f.h_shift = 0;
 	mb->f.max_itter = 100;
+	mb->f.c_shift = 1;
 	mb->vars.screen_height = 1000;
 	mb->vars.screen_width = 1000;
 }
